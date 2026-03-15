@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mac Kostenvergleich — März 2026 (Deutschland)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* === THEME VARIABLES === */
+  :root {
+    --font-heading: 'Nunito', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Semantic */
+    --color-error: #DC4545;
+    --color-warning: #EFB034;
+    --color-success: #2D8A4E;
+    --color-info: #3B7A8A;
+  }
+
+  /* --- DARK MODE (default) --- */
+  [data-theme="dark"] {
+    --bg: #1A2024;
+    --bg-surface: #232D31;
+    --primary: #2D5A3D;
+    --accent: #D4A843;
+    --tan: #E3C79D;
+    --text: #F5EEE6;
+    --text-secondary: #9CADA8;
+    --border: #2F3B3E;
+    --hover-row: rgba(45,90,61,0.18);
+    --best-row: rgba(45,138,78,0.18);
+    --price-col: rgba(212,168,67,0.08);
+    --price-header: #2a3a20;
+    --total-color: #D4A843;
+    --note-bg: #232D31;
+    --filter-bg: #232D31;
+    --filter-border: #2F3B3E;
+    --summary-bg: rgba(212,168,67,0.12);
+    --summary-border: #D4A843;
+    --scrollbar-thumb: #3a4a4e;
+    --link-color: #D4A843;
+    --btn-bg: #D4A843;
+    --btn-text: #1A2024;
+    --btn-secondary-bg: transparent;
+    --btn-secondary-text: #D4A843;
+    --btn-secondary-border: #D4A843;
+    --static-th-bg: #232D31;
+    --static-th-color: #9CADA8;
+    --static-border: #2F3B3E;
+  }
+
+  /* --- LIGHT MODE --- */
+  [data-theme="light"] {
+    --bg: #FDF8F3;
+    --bg-surface: #F5EEE6;
+    --primary: #2D5A3D;
+    --accent: #D4A843;
+    --tan: #E3C79D;
+    --text: #1A2A1F;
+    --text-secondary: #5A6B5E;
+    --border: #E5DDD3;
+    --hover-row: rgba(45,90,61,0.08);
+    --best-row: rgba(45,138,78,0.12);
+    --price-col: rgba(212,168,67,0.06);
+    --price-header: #2D5A3D;
+    --total-color: #bf4800;
+    --note-bg: #F5EEE6;
+    --filter-bg: #F5EEE6;
+    --filter-border: #E5DDD3;
+    --summary-bg: rgba(212,168,67,0.1);
+    --summary-border: #D4A843;
+    --scrollbar-thumb: #c5bfb5;
+    --link-color: #2D5A3D;
+    --btn-bg: #2D5A3D;
+    --btn-text: #FDF8F3;
+    --btn-secondary-bg: transparent;
+    --btn-secondary-text: #2D5A3D;
+    --btn-secondary-border: #2D5A3D;
+    --static-th-bg: #F5EEE6;
+    --static-th-color: #5A6B5E;
+    --static-border: #E5DDD3;
+  }
+
+  /* === PRINT === */
+  @page { size: A4 landscape; margin: 8mm; }
+  @media print { .no-print { display: none; } body { padding: 5mm; font-size: 9px; background: #fff !important; color: #000 !important; } .table-wrap { overflow: visible; } }
+
+  /* === BASE === */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-body); font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); padding: 16px; max-width: 1400px; margin: 0 auto; transition: background 0.3s ease, color 0.3s ease; }
+
+  .title-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
+  .title-bar h1 { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--text); flex: 1; }
+  .subtitle { font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+
+  h2 { font-family: var(--font-heading); font-size: 17px; font-weight: 700; margin: 28px 0 8px; color: var(--text); border-bottom: 2px solid var(--primary); padding-bottom: 4px; }
+  h3 { font-family: var(--font-heading); font-size: 14px; font-weight: 600; margin: 10px 0 5px; color: var(--accent); }
+
+  /* === THEME TOGGLE === */
+  .theme-toggle { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .theme-toggle span { font-size: 16px; line-height: 1; }
+  .toggle-switch { position: relative; width: 44px; height: 24px; cursor: pointer; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-track { position: absolute; inset: 0; background: var(--primary); border-radius: 12px; transition: background 0.3s; }
+  .toggle-knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: var(--text); border-radius: 50%; transition: transform 0.3s, background 0.3s; }
+  .toggle-switch input:checked ~ .toggle-knob { transform: translateX(20px); }
+
+  /* === Scrollable table wrapper === */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px 10px; padding: 0 4px; }
+  .table-wrap::-webkit-scrollbar { height: 6px; }
+  .table-wrap::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+  /* === Sortable table === */
+  .sortable { width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 13px; background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden; }
+  .sortable th { background: var(--primary); color: #F5EEE6; font-family: var(--font-body); font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--accent); cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; z-index: 2; }
+  .sortable th:hover { filter: brightness(1.2); }
+  .sortable th .arrow { font-size: 11px; margin-left: 3px; opacity: 0.4; }
+  .sortable th.asc .arrow, .sortable th.desc .arrow { opacity: 1; }
+  .sortable td { padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; color: var(--text); }
+  .sortable tr:hover td { background: var(--hover-row); }
+  .sortable tr.best td { background: var(--best-row); }
+  /* Price columns highlight */
+  .sortable .pc { background: var(--price-col); }
+  .sortable th.pc-h { background: var(--price-header); }
+  .sortable th.pc-h:hover { filter: brightness(1.25); }
+
+  .price { font-weight: 600; color: var(--text); }
+  .total-col { font-weight: 700; color: var(--total-color); font-size: 14px; }
+  .chip { display: inline-block; font-size: 11px; padding: 2px 6px; border-radius: var(--radius-sm); font-weight: 600; }
+  .chip-m4 { background: rgba(21,101,192,0.15); color: #5b9bd5; }
+  .chip-m5 { background: rgba(123,31,162,0.15); color: #b07ed8; }
+  .chip-m4p { background: rgba(46,125,50,0.15); color: #6aba6e; }
+  .chip-m5p { background: rgba(230,81,0,0.15); color: #e8925a; }
+  .chip-m4x { background: rgba(198,40,40,0.15); color: #e06060; }
+  .chip-m2u, .chip-m3u { background: rgba(150,150,150,0.15); color: #999; }
+
+  [data-theme="light"] .chip-m4 { background: #dfeefa; color: #1565c0; }
+  [data-theme="light"] .chip-m5 { background: #f0e0f5; color: #7b1fa2; }
+  [data-theme="light"] .chip-m4p { background: #dff0df; color: #2e7d32; }
+  [data-theme="light"] .chip-m5p { background: #faebd7; color: #e65100; }
+  [data-theme="light"] .chip-m4x { background: #fce0e4; color: #c62828; }
+  [data-theme="light"] .chip-m2u, [data-theme="light"] .chip-m3u { background: #ececec; color: #616161; }
+
+  .tag { display: inline-block; font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+  .tag-laptop { background: rgba(21,101,192,0.15); color: #5b9bd5; }
+  .tag-desktop { background: rgba(198,40,40,0.15); color: #e06060; }
+  .tag-aio { background: rgba(212,168,67,0.15); color: var(--accent); }
+  .tag-ws { background: rgba(123,31,162,0.15); color: #b07ed8; }
+
+  [data-theme="light"] .tag-laptop { background: #dfeefa; color: #1565c0; }
+  [data-theme="light"] .tag-desktop { background: #fce0e4; color: #c62828; }
+  [data-theme="light"] .tag-aio { background: #fdf5e1; color: #f57f17; }
+  [data-theme="light"] .tag-ws { background: #f0e0f5; color: #6a1b9a; }
+
+  .winner { display: inline-block; background: var(--accent); color: var(--bg); font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 700; }
+  .incl { color: var(--color-success); font-weight: 600; font-size: 11px; }
+
+  .note { font-family: var(--font-body); font-size: 12px; color: var(--text-secondary); margin: 6px 0; padding: 6px 10px; background: var(--note-bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .cols { display: flex; gap: 12px; }
+  .col { flex: 1; min-width: 0; }
+
+  table.static { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px; background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden; }
+  table.static th { background: var(--static-th-bg); color: var(--static-th-color); font-family: var(--font-body); font-weight: 600; text-align: left; padding: 6px 8px; border-bottom: 2px solid var(--border); }
+  table.static td { padding: 5px 8px; border-bottom: 1px solid var(--border); color: var(--text); }
+  table.static tr:hover { background: var(--hover-row); }
+
+  .card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 10px 12px; background: var(--bg-surface); transition: background 0.3s, border-color 0.3s; }
+  .card-title { font-family: var(--font-heading); font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .card-price { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--total-color); }
+  .card-detail { font-size: 12px; color: var(--text-secondary); }
+  .bar { height: 14px; border-radius: 3px; display: inline-block; vertical-align: middle; }
+  .legend { font-size: 11px; color: var(--text-secondary); }
+  .badge { font-size: 11px; font-weight: 700; color: #fff; padding: 2px 8px; border-radius: 10px; }
+  .badge-1 { background: var(--color-success); }
+  .badge-2 { background: var(--color-info); }
+  .badge-3 { background: var(--accent); color: var(--bg); }
+  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .filter-bar { display: flex; gap: 8px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+  .filter-bar label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+  .filter-bar select, .filter-bar input { font-size: 13px; padding: 4px 8px; border: 1px solid var(--filter-border); border-radius: var(--radius-md); background: var(--filter-bg); color: var(--text); }
+  .filter-bar button { font-size: 13px; padding: 4px 14px; border: 1px solid var(--btn-bg); background: var(--btn-bg); color: var(--btn-text); border-radius: var(--radius-md); cursor: pointer; font-weight: 600; }
+  .filter-bar button:hover { filter: brightness(1.1); }
+  .filter-bar button.secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); border-color: var(--btn-secondary-border); }
+
+  .gb-bar { display: inline-block; height: 10px; border-radius: 3px; background: var(--primary); vertical-align: middle; }
+
+  .summary-box { margin-top: 12px; padding: 8px 12px; background: var(--summary-bg); border-radius: var(--radius-md); border-left: 3px solid var(--summary-border); font-size: 13px; color: var(--text); }
+  .summary-box b { font-size: 13px; }
+
+  .footer { font-size: 11px; color: var(--text-secondary); margin-top: 8px; text-align: center; }
+
+  /* === TABLET (≤1024px) === */
+  @media (max-width: 1024px) {
+    body { padding: 12px; font-size: 13px; }
+    .title-bar h1 { font-size: 20px; }
+    h2 { font-size: 15px; }
+    .cols { flex-direction: column; gap: 8px; }
+    .section-grid { grid-template-columns: 1fr; }
+    .sortable { font-size: 12px; }
+    .sortable th, .sortable td { padding: 5px 7px; }
+  }
+
+  /* === MOBILE (≤640px) === */
+  @media (max-width: 640px) {
+    body { padding: 8px; font-size: 12px; }
+    .title-bar h1 { font-size: 17px; }
+    .title-bar { flex-wrap: wrap; }
+    h2 { font-size: 14px; margin: 14px 0 6px; }
+    h3 { font-size: 12px; }
+    .subtitle { font-size: 11px; }
+    .sortable { font-size: 11px; }
+    .sortable th { padding: 5px 6px; font-size: 10px; }
+    .sortable td { padding: 4px 6px; }
+    .total-col { font-size: 12px; }
+    .chip { font-size: 9px; padding: 1px 4px; }
+    .tag { font-size: 9px; }
+    .winner { font-size: 8px; }
+    table.static { font-size: 11px; }
+    table.static th, table.static td { padding: 4px 5px; }
+    .card { padding: 8px; }
+    .card-title { font-size: 12px; }
+    .card-price { font-size: 15px; }
+    .card-detail { font-size: 11px; }
+    .note { font-size: 10px; padding: 5px 8px; }
+    .filter-bar select, .filter-bar input { font-size: 12px; padding: 4px 6px; }
+    .filter-bar button { font-size: 12px; padding: 4px 10px; }
+    .filter-bar label { font-size: 12px; }
+    .legend { font-size: 9px; }
+    .badge { font-size: 9px; }
+    .summary-box { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="title-bar">
+  <h1>Mac Kaufberater — Interaktiver Kostenvergleich</h1>
+  <div class="theme-toggle no-print">
+    <span id="iconSun">☀️</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="themeSwitch" onchange="toggleTheme()">
+      <span class="toggle-track"></span>
+      <span class="toggle-knob"></span>
+    </label>
+    <span id="iconMoon">🌙</span>
+  </div>
+</div>
+<p class="subtitle">Klick auf eine Spalte zum Sortieren ▲/▼ · Alle Preise: Deutsche Straßenpreise, März 2026 · Mit ALLEN nötigen Extras</p>
+
+<!-- ====== Kosten-Aufteilung ====== -->
+<h2>Kosten-Aufteilung — Wohin geht dein Geld?</h2>
+<div class="section-grid">
+  <div class="card">
+    <div class="card-title">Mac mini M4 + Günstiges Setup</div>
+    <div class="card-price">~€917</div>
+    <div style="margin:4px 0">
+      <span class="bar" style="width:128px; background:var(--primary)"></span>
+      <span class="bar" style="width:59px; background:var(--color-success)"></span>
+      <span class="bar" style="width:13px; background:var(--accent)"></span>
+    </div>
+    <div class="legend">■ Mac €587 (64%) ■ Monitor €270 (29%) ■ Zubehör €60 (7%)</div>
+  </div>
+  <div class="card">
+    <div class="card-title">MacBook Air M4 13" (Abverkauf)</div>
+    <div class="card-price">~€852</div>
+    <div style="margin:4px 0"><span class="bar" style="width:200px; background:var(--primary)"></span></div>
+    <div class="legend">■ Alles dabei — echter Komplettpreis</div>
+  </div>
+  <div class="card">
+    <div class="card-title">iMac M4 10c (16/512)</div>
+    <div class="card-price">~€1.743</div>
+    <div style="margin:4px 0"><span class="bar" style="width:200px; background:var(--primary)"></span></div>
+    <div class="legend">■ 4.5K Bildschirm + Magic Tastatur (Touch ID) + Magic Maus — alles dabei</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Mac mini M4 Pro + 5K ASUS + Apple Zubehör</div>
+    <div class="card-price">~€2.306</div>
+    <div style="margin:4px 0">
+      <span class="bar" style="width:125px; background:var(--primary)"></span>
+      <span class="bar" style="width:57px; background:var(--color-success)"></span>
+      <span class="bar" style="width:18px; background:var(--accent)"></span>
+    </div>
+    <div class="legend">■ Mac €1.439 (62%) ■ Monitor €659 (29%) ■ Zubehör €208 (9%)</div>
+  </div>
+</div>
+
+<!-- ====== FILTERS ====== -->
+<div class="filter-bar no-print">
+  <label>Filter:</label>
+  <select id="filterType" onchange="filterTable()">
+    <option value="all">Alle Typen</option>
+    <option value="laptop">Nur Laptops</option>
+    <option value="desktop">Nur Desktops</option>
+    <option value="aio">Nur All-in-One</option>
+  </select>
+  <select id="filterChip" onchange="filterTable()">
+    <option value="all">Alle Chips</option>
+    <option value="M4">M4</option>
+    <option value="M5">M5</option>
+    <option value="M4 Pro">M4 Pro</option>
+    <option value="M5 Pro">M5 Pro</option>
+    <option value="M4 Max">M4 Max</option>
+    <option value="M5 Max">M5 Max</option>
+  </select>
+  <label>Max Gesamt €:</label>
+  <input type="number" id="filterMax" value="10000" min="500" max="10000" step="100" style="width:60px" onchange="filterTable()">
+  <button class="secondary" onclick="resetFilters()">Zurücksetzen</button>
+</div>
+
+<!-- ====== MAIN TABLE ====== -->
+<h2>Alle Macs — Alle Daten & ECHTE Gesamtkosten</h2>
+<p class="note">Laptops & iMac: Bildschirm+Tastatur dabei. Desktops: Monitor+Zubehör nötig. MacBook Pro: +€65 Ladegerät. Klick auf Spalte zum Sortieren.</p>
+
+<div class="table-wrap">
+<table class="sortable" id="mainTable">
+<thead>
+<tr>
+  <th data-sort="num">#<span class="arrow">▼</span></th>
+  <th data-sort="str">Mac<span class="arrow">▼</span></th>
+  <th data-sort="num" class="pc-h" style="color:#D4A843">GESAMT €<span class="arrow">▼</span></th>
+  <th data-sort="num" class="pc-h">Mac €<span class="arrow">▼</span></th>
+  <th data-sort="num" class="pc-h">+Monitor<span class="arrow">▼</span></th>
+  <th data-sort="num" class="pc-h">+Zubehör<span class="arrow">▼</span></th>
+  <th data-sort="num" class="pc-h">€/Punkt<span class="arrow">▼</span></th>
+  <th data-sort="str">Typ<span class="arrow">▼</span></th>
+  <th data-sort="chip">Chip<span class="arrow">▼</span></th>
+  <th data-sort="num">CPU<span class="arrow">▼</span></th>
+  <th data-sort="num">GPU<span class="arrow">▼</span></th>
+  <th data-sort="num">RAM<span class="arrow">▼</span></th>
+  <th data-sort="num">Speicher<span class="arrow">▼</span></th>
+  <th data-sort="num">BW GB/s<span class="arrow">▼</span></th>
+  <th data-sort="num">GB6 MC<span class="arrow">▼</span></th>
+  <th data-sort="str">Bildschirm<span class="arrow">▼</span></th>
+  <th data-sort="num">TB<span class="arrow">▼</span></th>
+</tr>
+</thead>
+<tbody>
+<tr data-type="laptop" data-chip="M4" data-total="852">
+  <td>1</td>
+  <td><b>MacBook Air M4 13"</b> <span class="winner">GÜNSTIGSTE</span></td>
+  <td class="total-col pc">852</td><td class="pc">852</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.059</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>8</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>256 <span class="gb-bar" style="width:6px"></span></td>
+  <td>120</td><td>14500</td>
+  <td>13.6" 2560×1664 60Hz</td><td>4</td>
+</tr>
+<tr data-type="desktop" data-chip="M4" data-total="917">
+  <td>2</td>
+  <td><b>Mac mini M4</b> + Dell 4K</td>
+  <td class="total-col pc">917</td><td class="pc">587</td><td class="pc">270</td><td class="pc">60</td><td class="pc">0.063</td>
+  <td><span class="tag tag-desktop">Desktop</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>256 <span class="gb-bar" style="width:6px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>Ext: 27" 4K 120Hz</td><td>4</td>
+</tr>
+<tr data-type="laptop" data-chip="M5" data-total="1199">
+  <td>3</td>
+  <td>MacBook Air M5 13"</td>
+  <td class="total-col pc">1199</td><td class="pc">1199</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.073</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5">M5</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>153</td><td>16500</td>
+  <td>13.6" 2560×1664 60Hz</td><td>4</td>
+</tr>
+<tr data-type="desktop" data-chip="M4" data-total="1244">
+  <td>4</td>
+  <td>Mac mini M4 (512) + Dell 4K</td>
+  <td class="total-col pc">1244</td><td class="pc">860</td><td class="pc">324</td><td class="pc">60</td><td class="pc">0.085</td>
+  <td><span class="tag tag-desktop">Desktop</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>Ext: 27" 4K 120Hz</td><td>4</td>
+</tr>
+<tr data-type="aio" data-chip="M4" data-total="1266">
+  <td>5</td>
+  <td><b>iMac M4 (8c)</b></td>
+  <td class="total-col pc">1266</td><td class="pc">1266</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.089</td>
+  <td><span class="tag tag-aio">Komplett</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>8</td><td>8</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>256 <span class="gb-bar" style="width:6px"></span></td>
+  <td>120</td><td>14200</td>
+  <td>24" 4.5K 4480×2520 60Hz</td><td>4</td>
+</tr>
+<tr data-type="desktop" data-chip="M4" data-total="1294">
+  <td>6</td>
+  <td>Mac mini M4 + BenQ 4K</td>
+  <td class="total-col pc">1294</td><td class="pc">587</td><td class="pc">499</td><td class="pc">208</td><td class="pc">0.088</td>
+  <td><span class="tag tag-desktop">Desktop</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>256 <span class="gb-bar" style="width:6px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>Ext: 27" 4K 60Hz P3</td><td>4</td>
+</tr>
+<tr data-type="laptop" data-chip="M5" data-total="1449">
+  <td>7</td>
+  <td>MacBook Air M5 13" (1TB)</td>
+  <td class="total-col pc">1449</td><td class="pc">1449</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.088</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5">M5</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>1000 <span class="gb-bar" style="width:25px"></span></td>
+  <td>153</td><td>16500</td>
+  <td>13.6" 2560×1664 60Hz</td><td>4</td>
+</tr>
+<tr data-type="laptop" data-chip="M5" data-total="1499">
+  <td>8</td>
+  <td>MacBook Air M5 15"</td>
+  <td class="total-col pc">1499</td><td class="pc">1499</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.091</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5">M5</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>153</td><td>16500</td>
+  <td>15.3" 2880×1864 60Hz</td><td>4</td>
+</tr>
+<tr data-type="aio" data-chip="M4" data-total="1536">
+  <td>9</td>
+  <td>iMac M4 (10c) 16/256</td>
+  <td class="total-col pc">1536</td><td class="pc">1536</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.105</td>
+  <td><span class="tag tag-aio">Komplett</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>256 <span class="gb-bar" style="width:6px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>24" 4.5K 4480×2520 60Hz</td><td>4</td>
+</tr>
+<tr data-type="laptop" data-chip="M5" data-total="1564">
+  <td>10</td>
+  <td>MacBook Pro 14" M5</td>
+  <td class="total-col pc">1564</td><td class="pc">1499</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.095</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5">M5</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>153</td><td>16500</td>
+  <td>14.2" 3024×1964 120Hz XDR</td><td>4</td>
+</tr>
+<tr data-type="aio" data-chip="M4" data-total="1743">
+  <td>11</td>
+  <td><b>iMac M4 (10c) 16/512</b></td>
+  <td class="total-col pc">1743</td><td class="pc">1743</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.119</td>
+  <td><span class="tag tag-aio">Komplett</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>16 <span class="gb-bar" style="width:16px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>24" 4.5K 4480×2520 60Hz</td><td>4</td>
+</tr>
+<tr data-type="desktop" data-chip="M4 Pro" data-total="1823">
+  <td>12</td>
+  <td><b>Mac mini M4 Pro</b> + Dell 4K</td>
+  <td class="total-col pc">1823</td><td class="pc">1439</td><td class="pc">324</td><td class="pc">60</td><td class="pc">0.087</td>
+  <td><span class="tag tag-desktop">Desktop</span></td>
+  <td><span class="chip chip-m4p">M4 Pro</span></td>
+  <td>12</td><td>16</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>273</td><td>21000</td>
+  <td>Ext: 27" 4K 120Hz</td><td>5</td>
+</tr>
+<tr data-type="laptop" data-chip="M5" data-total="1964">
+  <td>13</td>
+  <td>MacBook Pro 14" M5 (24/1TB)</td>
+  <td class="total-col pc">1964</td><td class="pc">1899</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.119</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5">M5</span></td>
+  <td>10</td><td>10</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>1000 <span class="gb-bar" style="width:25px"></span></td>
+  <td>153</td><td>16500</td>
+  <td>14.2" 3024×1964 120Hz XDR</td><td>4</td>
+</tr>
+<tr data-type="aio" data-chip="M4" data-total="2029">
+  <td>14</td>
+  <td>iMac M4 (10c) 24/512</td>
+  <td class="total-col pc">2029</td><td class="pc">2029</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">0.138</td>
+  <td><span class="tag tag-aio">Komplett</span></td>
+  <td><span class="chip chip-m4">M4</span></td>
+  <td>10</td><td>10</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>120</td><td>14652</td>
+  <td>24" 4.5K 4480×2520 60Hz</td><td>4</td>
+</tr>
+<tr data-type="laptop" data-chip="M5 Pro" data-total="2264">
+  <td>15</td>
+  <td>MacBook Pro 14" M5 Pro</td>
+  <td class="total-col pc">2264</td><td class="pc">2199</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.103</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5p">M5 Pro</span></td>
+  <td>15</td><td>16</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>1000 <span class="gb-bar" style="width:25px"></span></td>
+  <td>307</td><td>22000</td>
+  <td>14.2" 3024×1964 120Hz XDR</td><td>5</td>
+</tr>
+<tr data-type="desktop" data-chip="M4 Pro" data-total="2306">
+  <td>16</td>
+  <td>Mac mini M4 Pro + ASUS 5K</td>
+  <td class="total-col pc">2306</td><td class="pc">1439</td><td class="pc">659</td><td class="pc">208</td><td class="pc">0.110</td>
+  <td><span class="tag tag-desktop">Desktop</span></td>
+  <td><span class="chip chip-m4p">M4 Pro</span></td>
+  <td>12</td><td>16</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>273</td><td>21000</td>
+  <td>Ext: 27" 5K 60Hz P3</td><td>5</td>
+</tr>
+<tr data-type="desktop" data-chip="M4 Max" data-total="2841">
+  <td>17</td>
+  <td><b>Mac Studio M4 Max</b> + ASUS 5K</td>
+  <td class="total-col pc">2841</td><td class="pc">1974</td><td class="pc">659</td><td class="pc">208</td><td class="pc">0.101</td>
+  <td><span class="tag tag-ws">Profi</span></td>
+  <td><span class="chip chip-m4x">M4 Max</span></td>
+  <td>14</td><td>32</td>
+  <td>36 <span class="gb-bar" style="width:36px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>410</td><td>28000</td>
+  <td>Ext: 27" 5K 60Hz P3</td><td>5</td>
+</tr>
+<tr data-type="laptop" data-chip="M5 Pro" data-total="3064">
+  <td>18</td>
+  <td>MacBook Pro 16" M5 Pro</td>
+  <td class="total-col pc">3064</td><td class="pc">2999</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.128</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m5p">M5 Pro</span></td>
+  <td>18</td><td>20</td>
+  <td>24 <span class="gb-bar" style="width:24px"></span></td>
+  <td>1000 <span class="gb-bar" style="width:25px"></span></td>
+  <td>307</td><td>24000</td>
+  <td>16.2" 3456×2234 120Hz XDR</td><td>5</td>
+</tr>
+<tr data-type="desktop" data-chip="M4 Max" data-total="3702">
+  <td>19</td>
+  <td>Mac Studio M4 Max + Studio Display</td>
+  <td class="total-col pc">3702</td><td class="pc">1974</td><td class="pc">1520</td><td class="pc">208</td><td class="pc">0.132</td>
+  <td><span class="tag tag-ws">Profi</span></td>
+  <td><span class="chip chip-m4x">M4 Max</span></td>
+  <td>14</td><td>32</td>
+  <td>36 <span class="gb-bar" style="width:36px"></span></td>
+  <td>512 <span class="gb-bar" style="width:13px"></span></td>
+  <td>410</td><td>28000</td>
+  <td>Apple Studio 27" 5K 60Hz</td><td>5</td>
+</tr>
+<tr data-type="laptop" data-chip="M5 Max" data-total="4264">
+  <td>20</td>
+  <td>MacBook Pro 14" M5 Max</td>
+  <td class="total-col pc">4264</td><td class="pc">4199</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.142</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m4x">M5 Max</span></td>
+  <td>18</td><td>32</td>
+  <td>36 <span class="gb-bar" style="width:36px"></span></td>
+  <td>2000 <span class="gb-bar" style="width:50px"></span></td>
+  <td>614</td><td>30000</td>
+  <td>14.2" 3024×1964 120Hz XDR</td><td>5</td>
+</tr>
+<tr data-type="laptop" data-chip="M5 Max" data-total="4564">
+  <td>21</td>
+  <td>MacBook Pro 16" M5 Max</td>
+  <td class="total-col pc">4564</td><td class="pc">4499</td><td class="pc"><span class="incl">Inkl.</span></td><td class="pc">65</td><td class="pc">0.152</td>
+  <td><span class="tag tag-laptop">Laptop</span></td>
+  <td><span class="chip chip-m4x">M5 Max</span></td>
+  <td>18</td><td>32</td>
+  <td>36 <span class="gb-bar" style="width:36px"></span></td>
+  <td>2000 <span class="gb-bar" style="width:50px"></span></td>
+  <td>614</td><td>30000</td>
+  <td>16.2" 3456×2234 120Hz XDR</td><td>5</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p class="note">
+  <b>Spalten-Legende:</b> GESAMT = Mac + Monitor + Zubehör · €/Punkt = Kosten pro Geekbench-Punkt (weniger = besser) · CPU/GPU = Kerne · BW = Speicher-Geschwindigkeit · GB6 MC = Geekbench 6 Multi-Core · TB = Thunderbolt
+</p>
+
+<!-- ====== Drei Kauf-Richtungen ====== -->
+<h2>Drei Kauf-Richtungen im Vergleich</h2>
+<div class="cols">
+<div class="col">
+<h3><span class="badge badge-1">A</span> So günstig wie möglich</h3>
+<table class="static">
+<tr><th>Option</th><th>Gesamt</th><th>Was du bekommst</th></tr>
+<tr class="best"><td>MacBook Air M4 13"</td><td class="total-col">€852</td><td>Ganzer Laptop, Bildschirm, Tastatur, Trackpad. Abverkauf.</td></tr>
+<tr><td>Mac mini M4 + Dell 4K + Logi</td><td class="total-col">€917</td><td>Desktop, 27" 4K 120Hz, günstiges Zubehör</td></tr>
+<tr><td>Mac mini M4 + Samsung 4K</td><td class="total-col">€936</td><td>Desktop, 27" 4K 60Hz, KVM, LAN</td></tr>
+</table>
+</div>
+<div class="col">
+<h3><span class="badge badge-2">B</span> Beste Qualität im Budget (€1.200–1.800)</h3>
+<table class="static">
+<tr><th>Option</th><th>Gesamt</th><th>Warum</th></tr>
+<tr><td>MacBook Air M5 13" (512)</td><td class="total-col">€1.199</td><td>Neuester Chip, 2× SSD, Wi-Fi 7</td></tr>
+<tr class="best"><td>iMac M4 10c (16/256)</td><td class="total-col">€1.536</td><td>4.5K Bildschirm, kein Aufbau nötig</td></tr>
+<tr><td>MacBook Pro 14" M5</td><td class="total-col">€1.564</td><td>ProMotion 120Hz, aktive Kühlung</td></tr>
+<tr><td>iMac M4 10c (16/512)</td><td class="total-col">€1.743</td><td>Bester Komplett-Desktop</td></tr>
+</table>
+</div>
+</div>
+<div style="margin-top:6px">
+<h3><span class="badge badge-3">C</span> Beste Leistung pro Euro (Power-User)</h3>
+<table class="static">
+<tr><th>Option</th><th>Gesamt</th><th>GB6 MC</th><th>Großer Vorteil</th></tr>
+<tr class="best"><td>Mac mini M4 Pro + Dell 4K</td><td class="total-col">€1.823</td><td>~21.000</td><td>50% schneller als M4, günstigster Pro</td></tr>
+<tr><td>MacBook Pro 14" M5 Pro</td><td class="total-col">€2.264</td><td>~22.000</td><td>Mobil, ProMotion XDR, TB5</td></tr>
+<tr><td>Mac Studio M4 Max + ASUS 5K</td><td class="total-col">€2.841</td><td>~28.000</td><td>Arbeitsstation, 5 Bildschirme, 10 GbE</td></tr>
+</table>
+</div>
+
+<!-- ====== Was willst du machen ====== -->
+<h2>Was willst du machen? — Der richtige Mac für dich</h2>
+<div class="table-wrap">
+<table class="static">
+<tr><th>Nutzung</th><th>Beste Wahl</th><th>Gesamt</th><th>Warum</th><th>Günstige Alternative</th></tr>
+<tr><td><b>E-Mail, Web, Streaming</b></td><td>Mac mini M4 + günstiger 4K</td><td class="total-col">€917</td><td>Günstigster Desktop, schnell genug</td><td>Air M4 €852</td></tr>
+<tr><td><b>Mobil für Schule/Büro</b></td><td>MacBook Air M4 13"</td><td class="total-col">€852</td><td>Leise, 18h Akku, sehr leicht</td><td>Air M5 €1.199</td></tr>
+<tr><td><b>Komplett-Schreibtisch</b></td><td>iMac M4 10c</td><td class="total-col">€1.536</td><td>4.5K Bildschirm, Tastatur, Maus dabei</td><td>iMac 8c €1.266</td></tr>
+<tr><td><b>Software-Entwicklung</b></td><td>MacBook Air M5 13"</td><td class="total-col">€1.199</td><td>Leise, schnell, mobil</td><td>mini M4 Pro €1.823</td></tr>
+<tr><td><b>Video-Schnitt (4K)</b></td><td>MBP 14" M5 Pro</td><td class="total-col">€2.264</td><td>ProMotion XDR, 24 GB, TB5</td><td>Air M5 für 1080p</td></tr>
+<tr><td><b>Design / Foto</b></td><td>mini M4 Pro + BenQ</td><td class="total-col">€1.938</td><td>Farbtreuer Monitor, Pro-Leistung</td><td>iMac</td></tr>
+<tr><td><b>Musik-Produktion</b></td><td>MacBook Air M5</td><td class="total-col">€1.199</td><td>Kein Lüfter = kein Rauschen</td><td>Air M4 €852</td></tr>
+<tr><td><b>Profi (ML, 8K Video)</b></td><td>Mac Studio M4 Max</td><td class="total-col">€2.841</td><td>Volle Leistung, 5 Bildschirme</td><td>mini M4 Pro</td></tr>
+</table>
+</div>
+
+<!-- ====== Vorteile / Nachteile ====== -->
+<h2>Desktop vs Laptop vs Komplett-PC</h2>
+<div class="cols">
+<div class="col">
+<h3>Mac mini (Desktop)</h3>
+<table class="static">
+<tr><th style="color:var(--color-success)">Vorteile</th><th style="color:var(--color-error)">Nachteile</th></tr>
+<tr><td>Günstigster Mac (€587)</td><td>Kein Bildschirm/Tastatur/Maus</td></tr>
+<tr><td>Du wählst DEINEN Monitor</td><td>+€300–700 für Zubehör</td></tr>
+<tr><td>3 Bildschirme möglich</td><td>Kein Wi-Fi 7 (nur 6E)</td></tr>
+<tr><td>M4 Pro möglich</td><td>256 GB Basis zu wenig</td></tr>
+<tr><td>Sehr klein (12,7 cm)</td><td>Nur in Silber</td></tr>
+</table>
+</div>
+<div class="col">
+<h3>MacBook Air / Pro (Laptop)</h3>
+<table class="static">
+<tr><th style="color:var(--color-success)">Vorteile</th><th style="color:var(--color-error)">Nachteile</th></tr>
+<tr><td>Mobil — überall nutzbar</td><td>Nur 13–16" Bildschirm</td></tr>
+<tr><td>Bildschirm+Tastatur dabei</td><td>RAM/SSD nicht änderbar</td></tr>
+<tr><td>Akku 18–24 Stunden</td><td>Pro: kein Ladegerät (+€65)</td></tr>
+<tr><td>Air: kein Lüfter</td><td>Air: wird langsamer bei Last</td></tr>
+<tr><td>2 externe Monitore</td><td>Pro: 1,55–2,16 kg</td></tr>
+</table>
+</div>
+<div class="col">
+<h3>iMac (Komplett-PC)</h3>
+<table class="static">
+<tr><th style="color:var(--color-success)">Vorteile</th><th style="color:var(--color-error)">Nachteile</th></tr>
+<tr><td>4.5K Bildschirm dabei</td><td>Nur 24" (kein 27")</td></tr>
+<tr><td>Tastatur + Maus dabei</td><td>Nur M4 (kein Pro/Max)</td></tr>
+<tr><td>Sofort fertig, 7 Farben</td><td>Nur 60 Hz</td></tr>
+<tr><td>Gleich schnell wie mini</td><td>Nicht aufrüstbar</td></tr>
+<tr><td>Sehr leise</td><td>1–2 externe Monitore</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ====== Monitor-Optionen ====== -->
+<h2>Monitor-Optionen für Desktop Macs</h2>
+<div class="table-wrap">
+<table class="static">
+<tr><th>Stufe</th><th>Monitor</th><th>Größe / Auflösung</th><th>Hz</th><th>USB-C</th><th>Preis</th><th>Passt am besten zu</th></tr>
+<tr class="best"><td><b>Günstig</b></td><td>Dell S2725QS</td><td>27" 4K</td><td>120</td><td>Nein</td><td class="price">~€270</td><td>Mac mini günstig</td></tr>
+<tr><td></td><td>Samsung S80UD</td><td>27" 4K</td><td>60</td><td>90W</td><td class="price">~€289</td><td>Mac mini (KVM)</td></tr>
+<tr><td></td><td>Dell S2725QC</td><td>27" 4K</td><td>120</td><td>65W</td><td class="price">~€324</td><td>Ein-Kabel-Setup</td></tr>
+<tr><td><b>Mittel</b></td><td>BenQ PD2705U</td><td>27" 4K</td><td>60</td><td>65W</td><td class="price">~€399</td><td>Design günstig</td></tr>
+<tr><td></td><td>BenQ MA270U</td><td>27" 4K</td><td>60</td><td>90W</td><td class="price">~€499</td><td>Mac mini / Studio</td></tr>
+<tr><td><b>Premium</b></td><td>ASUS ProArt PA27JCV</td><td>27" 5K</td><td>60</td><td>96W</td><td class="price">~€659</td><td>mini Pro / Studio</td></tr>
+<tr><td></td><td>Apple Studio Display</td><td>27" 5K</td><td>60</td><td>96W</td><td class="price">~€1.520</td><td>Studio (nativ)</td></tr>
+</table>
+</div>
+
+<!-- ====== Geld sparen ====== -->
+<h2>Geld sparen — Tipps</h2>
+<div class="cols">
+<div class="col card">
+  <div class="card-title">Bildungsrabatt</div>
+  <div class="card-detail">Mac mini: <b>ab €579</b> · Air: <b>ab €969</b> · iMac: <b>ab €1.439</b>. MacTrade/edustore sind manchmal noch günstiger.</div>
+</div>
+<div class="col card">
+  <div class="card-title">Abverkauf & Gebraucht</div>
+  <div class="card-detail">M4 Air für <b>€852</b> = historisch günstig. Apple Refurbished: bis <b>15% günstiger</b>. Geizhals.de & idealo.de: 8–15% unter UVP.</div>
+</div>
+<div class="col card">
+  <div class="card-title">Finanzierung</div>
+  <div class="card-detail">Apple Edu: <b>0% für 12–24 Monate</b>. MediaMarkt: <b>10 Monate 0%</b>. MacTrade: 6 Monate 0%.</div>
+</div>
+</div>
+
+<div class="summary-box">
+  <b>Zusammenfassung:</b>
+  Mobil? → <b>Air M4 €852</b>.
+  Desktop? → <b>mini M4 ~€917</b>.
+  Sofort fertig? → <b>iMac ~€1.266</b>.
+  Viel Leistung? → <b>mini M4 Pro ~€1.823</b>.
+</div>
+<p class="footer">MacPC.pdf · Deutsche Straßenpreise, März 2026 · Klick auf Spalten zum Sortieren</p>
+
+<!-- ====== JAVASCRIPT ====== -->
+<script>
+/* === THEME TOGGLE === */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeSwitch').checked = !isDark;
+  try { localStorage.setItem('mac-theme', isDark ? 'light' : 'dark'); } catch(e) {}
+}
+
+// Restore saved theme (default dark)
+(function() {
+  try {
+    const saved = localStorage.getItem('mac-theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.getElementById('themeSwitch').checked = true;
+    }
+  } catch(e) {}
+})();
+
+/* === SORTING + FILTERING === */
+(function() {
+  const table = document.getElementById('mainTable');
+  const thead = table.querySelector('thead');
+  const tbody = table.querySelector('tbody');
+  const headers = thead.querySelectorAll('th');
+
+  const chipRank = { 'M4': 1, 'M5': 2, 'M4 Pro': 3, 'M5 Pro': 4, 'M4 Max': 5, 'M5 Max': 6, 'M3 Ultra': 7, 'M2 Ultra': 8 };
+  let currentSort = { col: -1, dir: 'asc' };
+
+  function extractNumber(text) {
+    const clean = text.replace(/[€~,]/g, '').replace(/Inkl\./i, '0').replace(/Incl\./i, '0');
+    const m = clean.match(/([\d.]+)/);
+    return m ? parseFloat(m[1]) : 0;
+  }
+
+  function getChipText(cell) {
+    const chip = cell.querySelector('.chip');
+    return chip ? chip.textContent.trim() : cell.textContent.trim();
+  }
+
+  function sortTable(colIndex) {
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const type = headers[colIndex].dataset.sort;
+    let dir = 'asc';
+    if (currentSort.col === colIndex && currentSort.dir === 'asc') dir = 'desc';
+
+    rows.sort((a, b) => {
+      const cellA = a.cells[colIndex];
+      const cellB = b.cells[colIndex];
+      let valA, valB;
+
+      if (type === 'num') {
+        valA = extractNumber(cellA.textContent);
+        valB = extractNumber(cellB.textContent);
+      } else if (type === 'chip') {
+        valA = chipRank[getChipText(cellA)] || 99;
+        valB = chipRank[getChipText(cellB)] || 99;
+      } else {
+        valA = cellA.textContent.trim().toLowerCase();
+        valB = cellB.textContent.trim().toLowerCase();
+      }
+
+      if (type === 'str') {
+        return dir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      }
+      return dir === 'asc' ? valA - valB : valB - valA;
+    });
+
+    headers.forEach(h => { h.classList.remove('asc', 'desc'); h.querySelector('.arrow').textContent = '▼'; });
+    headers[colIndex].classList.add(dir);
+    headers[colIndex].querySelector('.arrow').textContent = dir === 'asc' ? '▲' : '▼';
+
+    rows.forEach((row, i) => {
+      row.cells[0].textContent = i + 1;
+      tbody.appendChild(row);
+    });
+
+    currentSort = { col: colIndex, dir: dir };
+  }
+
+  headers.forEach((header, i) => {
+    header.addEventListener('click', () => sortTable(i));
+  });
+
+  window.filterTable = function() {
+    const typeFilter = document.getElementById('filterType').value;
+    const chipFilter = document.getElementById('filterChip').value;
+    const maxTotal = parseInt(document.getElementById('filterMax').value) || 99999;
+    const rows = tbody.querySelectorAll('tr');
+    let count = 0;
+
+    rows.forEach(row => {
+      const rowType = row.dataset.type;
+      const rowChip = row.dataset.chip;
+      const rowTotal = parseInt(row.dataset.total) || 0;
+
+      let show = true;
+      if (typeFilter !== 'all' && rowType !== typeFilter) show = false;
+      if (chipFilter !== 'all' && rowChip !== chipFilter) show = false;
+      if (rowTotal > maxTotal) show = false;
+
+      row.style.display = show ? '' : 'none';
+      if (show) { count++; row.cells[0].textContent = count; }
+    });
+  };
+
+  window.resetFilters = function() {
+    document.getElementById('filterType').value = 'all';
+    document.getElementById('filterChip').value = 'all';
+    document.getElementById('filterMax').value = '10000';
+    filterTable();
+  };
+})();
+</script>
+
+</body>
+</html>
